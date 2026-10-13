@@ -1,0 +1,67 @@
+-- ACCRA LIFE V44 HOME ESSENTIALS CATALOG EXPANSION
+-- Adds sofas, TVs, ACs, fans, mirrors, jacuzzis, kitchen cabinets/sinks/storage, and correctly priced wardrobes.
+-- Safe to run more than once; existing wallet balances and ownership records are not changed.
+begin;
+
+-- V43 CATALOG EXPANSION: individual products, Ghana-cedi prices, and distinct product photos.
+-- Safe to re-run: existing product names are updated, new names are inserted once.
+with items(name,category,price,icon,tier,image_url) as (values
+ ('Compact 2-Seater Sofa','Living Room',1200,'🛋️','Middle','https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=82'),
+ ('3-Seater Velvet Sofa','Living Room',2200,'🛋️','Middle','https://images.unsplash.com/photo-1550254478-383611b9d5a4?auto=format&fit=crop&w=900&q=82'),
+ ('L-Shaped Family Sofa','Living Room',3800,'🛋️','Luxury','https://images.unsplash.com/photo-1550254478-383611b9d5a4?auto=format&fit=crop&w=900&q=82&sat=-20'),
+ ('Premium Leather Sectional Sofa','Living Room',6500,'🛋️','Luxury','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=82'),
+ ('32-inch LED TV','Living Room',1500,'📺','Middle','https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=82'),
+ ('43-inch Smart TV','Living Room',2800,'📺','Middle','https://images.unsplash.com/photo-1461151304267-38535e780c79?auto=format&fit=crop&w=900&q=82'),
+ ('55-inch 4K UHD TV','Living Room',4500,'📺','Luxury','https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=900&q=82'),
+ ('65-inch QLED Smart TV','Living Room',7500,'📺','Luxury','https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=900&q=82'),
+ ('1.0 HP Wall Air Conditioner','Comfort',2800,'❄️','Middle','https://images.unsplash.com/photo-1631545806609-7e5cc8a4c7d9?auto=format&fit=crop&w=900&q=82'),
+ ('1.5 HP Inverter Air Conditioner','Comfort',3800,'❄️','Middle','https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=900&q=82'),
+ ('2.0 HP Premium Air Conditioner','Comfort',5200,'❄️','Luxury','https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=900&q=82'),
+ ('Portable Air Conditioner','Comfort',2200,'❄️','Middle','https://images.unsplash.com/photo-1631545806609-7e5cc8a4c7d9?auto=format&fit=crop&w=900&q=82&sat=-30'),
+ ('Ceiling Fan','Comfort',450,'🪭','Middle','https://images.unsplash.com/photo-1615874694520-474822394e73?auto=format&fit=crop&w=900&q=82'),
+ ('Standing Fan','Comfort',350,'🪭','Middle','https://images.unsplash.com/photo-1581276180379-4a0e7b4a5b13?auto=format&fit=crop&w=900&q=82'),
+ ('Table Fan','Comfort',250,'🪭','Budget','https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&w=900&q=82'),
+ ('Rechargeable Fan','Comfort',400,'🪭','Middle','https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=900&q=82'),
+ ('Round Wall Mirror','Decor',150,'🪞','Budget','https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=82'),
+ ('Full-Length Standing Mirror','Bedroom',350,'🪞','Middle','https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=82'),
+ ('LED Bathroom Mirror','Bathroom',600,'🪞','Middle','https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=900&q=82'),
+ ('Ornate Gold Decorative Mirror','Decor',900,'🪞','Luxury','https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=82'),
+ ('2-Person Jacuzzi','Bathroom',5500,'🛁','Luxury','https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=900&q=82&sat=-15'),
+ ('4-Person Family Jacuzzi','Bathroom',8500,'🛁','Luxury','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=82'),
+ ('6-Person Luxury Jacuzzi','Bathroom',12000,'🛁','Luxury','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=82'),
+ ('Outdoor Hot Tub','Bathroom',15000,'🛁','Luxury','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=82'),
+ ('Small Wall Kitchen Cabinet','Kitchen',800,'🗄️','Budget','https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=900&q=82'),
+ ('Large Wall Kitchen Cabinet','Kitchen',1500,'🗄️','Middle','https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=900&q=82'),
+ ('L-Shaped Kitchen Cabinet Set','Kitchen',3500,'🗄️','Luxury','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=82'),
+ ('Full Modern Kitchen Cabinet Set','Kitchen',6500,'🗄️','Luxury','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=82&sat=-25'),
+ ('Single-Bowl Kitchen Sink','Kitchen',450,'🚰','Middle','https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=82'),
+ ('Double-Bowl Stainless Sink','Kitchen',850,'🚰','Middle','https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=900&q=82&sat=-35'),
+ ('Premium Granite Kitchen Sink','Kitchen',1400,'🚰','Luxury','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=82&sat=-25'),
+ ('Under-Sink Storage Cabinet','Kitchen',900,'🗄️','Middle','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=82'),
+ ('Small 2-Door Wardrobe','Bedroom',850,'👗','Middle','https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=900&q=82'),
+ ('Medium 3-Door Wardrobe','Bedroom',1000,'👗','Middle','https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=900&q=82'),
+ ('Large 4-Door Wardrobe','Bedroom',2000,'👗','Luxury','https://images.unsplash.com/photo-1591129841117-3adfd313e34f?auto=format&fit=crop&w=900&q=82'),
+ ('Premium Sliding-Door Wardrobe','Bedroom',2800,'👗','Luxury','https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=82&sat=-40'),
+ ('Walk-In Wardrobe Closet','Bedroom',5500,'👗','Luxury','https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=82')
+)
+insert into public.furniture_items(name,category,price,icon,image_url,tier)
+select i.name,i.category,i.price,i.icon,i.image_url,i.tier
+from items i
+where not exists (select 1 from public.furniture_items f where lower(f.name)=lower(i.name));
+
+-- Correct older wardrobe listings so no wardrobe is priced unrealistically low.
+update public.furniture_items set price=850,tier='Middle'
+where lower(name)='small 2-door wardrobe';
+update public.furniture_items set price=1000,tier='Middle'
+where lower(name)='large 3-door wooden wardrobe';
+update public.furniture_items set price=2000,tier='Luxury'
+where lower(name)='walk-in closet';
+
+-- Give the older catalogue rows real photo URLs if missing, without overwriting a user's existing custom image.
+update public.furniture_items set image_url='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=82'
+where lower(name)='2-seater fabric sofa' and (image_url is null or image_url='');
+update public.furniture_items set image_url='https://images.unsplash.com/photo-1461151304267-38535e780c8f?auto=format&fit=crop&w=900&q=82'
+where lower(name)='43-inch smart television' and (image_url is null or image_url='');
+
+
+commit;
